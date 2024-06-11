@@ -2,7 +2,6 @@
 *.json
 tmp/
 **/.idea/
-**/test*/
 *.egg-info/
 andreactl.py
 .DS_Store
