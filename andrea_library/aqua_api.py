@@ -30,6 +30,8 @@ def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
         "X-Signature": signature
     }
 
-    response = requests.post(api_url, headers=headers, data=post_body_str)
+    result = requests.post(api_url, headers=headers, data=post_body_str)
+
+    return result
 
     return response
