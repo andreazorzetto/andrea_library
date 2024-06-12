@@ -34,4 +34,28 @@ def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
 
     return result
 
-    return response
+
+def api_get_repositories(csp_url, token, page, page_size, registry=None, scope=None):
+    if registry:
+        api_url = "{csp_url}/api/v2/repositories?registry={registry}&page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
+            csp_url=csp_url,
+            registry=registry,
+            page=page,
+            page_size=page_size)
+    elif scope:
+        api_url = "{csp_url}/api/v2/repositories?scope={scope}&page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
+            csp_url=csp_url,
+            scope=scope,
+            page=page,
+            page_size=page_size)
+    else:
+        api_url = "{csp_url}/api/v2/repositories?page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
+            csp_url=csp_url,
+            page=page,
+            page_size=page_size)
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    result = requests.get(url=api_url, headers=headers, verify=False)
+
+    return result
