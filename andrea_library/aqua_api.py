@@ -2,6 +2,10 @@ import requests
 import time
 import hmac
 import hashlib
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+http = urllib3.PoolManager()
 
 
 def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
