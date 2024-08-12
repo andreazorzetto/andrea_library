@@ -36,23 +36,46 @@ def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
 
 
 def api_get_repositories(csp_url, token, page, page_size, registry=None, scope=None):
+    api_url = "{csp_url}/api/v2/repositories?page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
+            csp_url=csp_url,
+            page=page,
+            page_size=page_size)
+
     if registry:
-        api_url = "{csp_url}/api/v2/repositories?registry={registry}&page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
-            csp_url=csp_url,
-            registry=registry,
-            page=page,
-            page_size=page_size)
+        api_url = "{api_url}&registry={registry}".format(
+            api_url=api_url,
+            registry=registry)
+
     elif scope:
-        api_url = "{csp_url}/api/v2/repositories?scope={scope}&page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
+        api_url = "{api_url}&scope={scope}".format(
+            api_url=api_url,
+            scope=scope)
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    result = requests.get(url=api_url, headers=headers, verify=False)
+
+    return result
+
+
+# api call to get enforcer groups and enforcers
+def api_get_enforcer_groups(csp_url, token, enforcer_group=None, scope=None, page_index=1, page_size=100):
+    api_url = "{csp_url}/api/v1/hostsbatch?page={page_index}&pagesize={page_size}".format(
             csp_url=csp_url,
-            scope=scope,
-            page=page,
+            page_index=page_index,
             page_size=page_size)
-    else:
-        api_url = "{csp_url}/api/v2/repositories?page={page}&pagesize={page_size}&include_totals=true&order_by=name".format(
-            csp_url=csp_url,
-            page=page,
-            page_size=page_size)
+
+    if enforcer_group:
+        api_url = "{api_url}&search={enforcer_group}".format(
+            api_url=api_url,
+            enforcer_group=enforcer_group
+        )
+
+    if scope:
+        api_url = "{api_url}&scope={scope}".format(
+            api_url=api_url,
+            scope=scope
+        )
 
     headers = {'Authorization': f'Bearer {token}'}
 

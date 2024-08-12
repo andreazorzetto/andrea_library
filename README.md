@@ -30,9 +30,10 @@ Examples demonstrating the usage of Andrea_Library are available in the `example
 ## Testing
 To ensure everything is working correctly, you can run the test suite included with the library. This can help verify that all functionalities are operating as expected.
 ### Running Tests
-Navigate to the library's directory and use the following command to run the tests:
+Navigate to the library's directory and use the following command to run the tests, for either mocked or real tests:
 ```bash
-pytest tests/
+pytest tests/mock/
+pytest tests/real/
 ```
 
 The test results will provide feedback on the various components of the library, making it easier to identify and resolve any issues.
