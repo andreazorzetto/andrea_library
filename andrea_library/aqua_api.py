@@ -1,20 +1,17 @@
 import requests
-import time
 import hmac
 import hashlib
+import time
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 http = urllib3.PoolManager()
 
-
 def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
     timestamp = str(int(time.time()))
-    api_url = base_url + "/v2/tokens"
+    api_url = f"{base_url}/v2/tokens"
 
-    # Define the body of the POST request
-    post_body_str = str(
-        '{"validity":240,"allowed_endpoints":' + api_methods + ',"csp_roles":["' + aqua_role + '"]}').replace(" ", "")
+    post_body_str='{"validity":240,"allowed_endpoints":' + api_methods + '}'
 
     # Create the string to sign
     string_to_sign = timestamp + "POST" + "/v2/tokens" + post_body_str
@@ -22,7 +19,14 @@ def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
     # Create HMAC signature
     signature = hmac.new(api_secret.encode(), string_to_sign.encode(), hashlib.sha256).hexdigest()
 
-    # Issue the signed request to get authentication token
+    # Debugging prints
+    # print("POST Body:", post_body_str)
+    # print("String to Sign:", string_to_sign)
+    # print("Signature:", signature)
+    # print("API URL:", api_url)
+    # print("BASE URL:", base_url)
+
+    # Set up the headers for the request
     headers = {
         "Content-Type": "application/json",
         "X-API-Key": api_key,
@@ -30,9 +34,17 @@ def api_authentication(base_url, api_key, api_secret, aqua_role, api_methods):
         "X-Signature": signature
     }
 
-    result = requests.post(api_url, headers=headers, data=post_body_str)
+    # Issue the signed request to get the authentication token
+    try: 
+        response = requests.post(api_url, headers=headers, data=post_body_str)
+        print("url:", response.request.url)
+        print("header:", response.request.headers)
+        print("body:", response.request.body)
+        print("method:", response.request.method)
 
-    return result
+        return response
+    except Exception as e:
+        print(e)
 
 
 def api_get_repositories(csp_url, token, page, page_size, registry=None, scope=None):

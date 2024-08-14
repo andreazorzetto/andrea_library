@@ -6,3 +6,5 @@ tmp/
 andreactl.py
 .DS_Store
 andrea_library/__pycache__/
+aquaenv/
+*__pycache__/
